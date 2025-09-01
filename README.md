@@ -3,26 +3,20 @@
 Source of truth for reusable ChatGPT prompt modes. Mirror these into ChatGPT Projects for daily use.
 
 ## Structure
-- prompts/ one file per mode
-- projects/ project-level prompt templates
-- account/ global account-level instructions
+- prompts/ scratch, experimental snippets (not canonical)
+- projects/ canonical Project prompts (`prompt.md`, `instructions.md`)
+- account/ AI profile and settings
+- .github/ configs and templates
 - LICENSE MIT
-- .github templates for issues and PRs
 
 ## Quick Start
 1. Clone repo
-2. Edit prompts in `prompts/`
+2. Edit canonical prompts under `/projects/<name>/prompt.md`. Use `/prompts` for experiments only.
 3. Copy a prompt into ChatGPT to switch modes
 4. Submit PRs for improvements
 
 ## Modes
-- Checklist Mode
-- README Mode
-- Sprint Mode
-- Devil's Advocate Mode
-- Compact Notes Mode
-- Sandbox Mode
-- Research Mode
+See `/projects` for canonical modes. `/prompts` contains scratch/experimental snippets.
 
 ## How to Use With ChatGPT
 
@@ -47,9 +41,13 @@ Optimize for ADHD readability. TL,DR first. Chunk into sections. Format for READ
 The `/projects/` folder is for prompt templates that are explicitly meant to be loaded into ChatGPT Projects. These templates may include `Instructions` text and recommended pinned files. Unlike `/prompts/`, which are mode snippets you can drop anywhere, `/projects/` files are designed to structure a whole Project context.
 
 Examples of potential project templates include:
-- `sre-runbooks.md`
-- `research-assistant.md`
-- `writing-assistant.md`
+- `projects/sre-runbooks/`
+- `projects/research-assistant/`
+- `projects/writing-assistant/`
+- `projects/checklist-assistant/`
+- `projects/sprint-planner/`
+- `projects/devils-advocate/`
+- `projects/compact-notes/`
 
 ## Structure
 
@@ -58,3 +56,15 @@ Examples of potential project templates include:
 - account/ AI profile and settings
 
 Canonical prompts that power ChatGPT Projects live under /projects/<name>/prompt.md. Keep /prompts for experiments only.
+
+## How to use Projects
+
+1. Create a Project in ChatGPT with the same name as a folder under `/projects`.
+
+2. Paste the contents of that project's `prompt.md` into the Project's **Prompt** field.
+
+3. Paste `instructions.md` into the Project's **Instructions** field.
+
+4. If the Project needs files, attach them in the Project so the assistant can read them.
+
+5. Keep `/projects/<name>/prompt.md` as the single source of truth. Update here, then copy to ChatGPT when it changes.

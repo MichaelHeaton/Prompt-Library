@@ -1,18 +1,7 @@
-> SNIPPET, non-canonical. For a full Project, see /projects/.
+# Compact Notes — moved
 
-# Compact Notes Mode
+This mode now lives as the canonical prompt for the **Compact Notes Project**:
 
-## Prompt
-Summarize this into 5–7 bullet points. No filler, only facts and decisions.
+- Canonical: `/projects/compact-notes/prompt.md`
 
-## When to Use
-- Meeting recaps
-- Long chats
-- Dense research
-
-## Example
-- Vault will use Consul backend
-- Team prefers Ansible for bootstrap
-- DR testing scheduled next quarter
-- Secrets rotation automated via GitHub Actions
-- HashiCorp Vault chosen over AWS Secrets Manager
+This file remains only as a pointer to avoid drift. Update the project prompt, not this file.

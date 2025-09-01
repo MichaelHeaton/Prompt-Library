@@ -118,15 +118,23 @@ def ensure_prompts_policy(dry: bool):
     else:
         write_if_absent(readme_p, readme_content, dry)
 
+    # 2) Promote compact-notes: turn snippet into a pointer to the canonical Project prompt
+    compact_ptr = (
+        "# Compact Notes — moved\n\n"
+        "This mode now lives as the canonical prompt for the **Compact Notes Project**:\n\n"
+        "- Canonical: `/projects/compact-notes/prompt.md`\n\n"
+        "This file remains only as a pointer to avoid drift. Update the project prompt, not this file.\n"
+    )
+    compact_md = prompts / "compact-notes-mode.md"
+    if compact_md.exists():
+        overwrite_file(compact_md, compact_ptr, dry)
+    else:
+        write_if_absent(compact_md, compact_ptr, dry)
 
-    # 3) Leave these as scratch snippets with a banner
+    # 3) Leave sandbox as scratch with a banner
     banner = "> SNIPPET, non-canonical. For a full Project, see /projects/."
-    for name in [
-        "compact-notes-mode.md",
-        "sandbox-mode.md",
-    ]:
-        path = prompts / name
-        prepend_banner_if_missing(path, banner, dry)
+    sandbox = prompts / "sandbox-mode.md"
+    prepend_banner_if_missing(sandbox, banner, dry)
 
 def ensure_all_projects(dry: bool):
     """Create canonical Projects and seed prompt/instructions if missing."""
@@ -376,6 +384,37 @@ Run
 - If needed, request a "risk-to-mitigation" table.
 """,
         },
+        "compact-notes": {
+            "prompt": """# Compact Notes — Pinned Prompt
+
+Role: ultra-compact note taker and summarizer.
+
+Behavior
+- Ask for the source type [meeting, article, video, doc].
+- Capture key points as bullets, each ≤ 12 words.
+- Add a 3-line TL,DR then a short action list.
+- Tag items with [A]/[B]/[C] priority when asked.
+- Provide a one-screen condensed view on request.
+
+Output
+- Sections: TL,DR, Key Points, Actions, Open Questions.
+- Use simple bullets and short tables only when helpful.
+- No fluff. Prefer verbs. Avoid em and en dashes.
+""",
+            "instructions": """# Compact Notes — Instructions
+
+Use for: fast capture and compression of notes.
+
+Inputs
+- Context [meeting, article, video, doc]
+- Any priorities or deadlines
+
+Run
+- Paste raw notes or link summary text.
+- Ask for TL,DR and an actions list first.
+- Request condensed one-screen view if needed.
+""",
+        },
     }
 
     for name, files in projects.items():
@@ -442,11 +481,23 @@ def update_root_readme(dry: bool):
         "- account/ AI profile and settings\n\n"
         "Canonical prompts that power ChatGPT Projects live under /projects/<name>/prompt.md. Keep /prompts for experiments only.\n"
     )
+    howto = (
+        "\n\n## How to use Projects\n\n"
+        "1. Create a Project in ChatGPT with the same name as a folder under `/projects`.\n\n"
+        "2. Paste the contents of that project's `prompt.md` into the Project's **Prompt** field.\n\n"
+        "3. Paste `instructions.md` into the Project's **Instructions** field.\n\n"
+        "4. If the Project needs files, attach them in the Project so the assistant can read them.\n\n"
+        "5. Keep `/projects/<name>/prompt.md` as the single source of truth. Update here, then copy to ChatGPT when it changes.\n"
+    )
     if not path.exists():
-        write_if_absent(path, "# Prompt Library" + structure_note, dry)
+        write_if_absent(path, "# Prompt Library" + structure_note + howto, dry)
         return
     txt = path.read_text(encoding="utf-8")
     if "scratch prompt snippets (non-canonical)" in txt and "Canonical prompts that power ChatGPT Projects" in txt:
+        if "## How to use Projects" not in txt:
+            new = (txt.rstrip() + howto) if txt else ("# Prompt Library" + structure_note + howto)
+            overwrite_file(path, new, dry)
+            return
         log("README=✅ structure noted")
         return
     new = txt.rstrip() + structure_note
